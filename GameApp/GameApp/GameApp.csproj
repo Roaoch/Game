@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Raylib-cs">
+      <HintPath>..\..\Raylib-cs-master\Raylib-cs\bin\Debug\net5.0\Raylib-cs.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
