@@ -18,3 +18,10 @@ D:\The Game\GameApp\GameApp\obj\Debug\net5.0\refint\GameApp.dll
 D:\The Game\GameApp\GameApp\obj\Debug\net5.0\GameApp.pdb
 D:\The Game\GameApp\GameApp\obj\Debug\net5.0\GameApp.genruntimeconfig.cache
 D:\The Game\GameApp\GameApp\obj\Debug\net5.0\ref\GameApp.dll
+D:\The Game\GameApp\GameApp\bin\Debug\net5.0\NUnit3.TestAdapter.dll
+D:\The Game\GameApp\GameApp\bin\Debug\net5.0\NUnit3.TestAdapter.pdb
+D:\The Game\GameApp\GameApp\bin\Debug\net5.0\nunit.engine.dll
+D:\The Game\GameApp\GameApp\bin\Debug\net5.0\nunit.engine.api.dll
+D:\The Game\GameApp\GameApp\bin\Debug\net5.0\nunit.engine.core.dll
+D:\The Game\GameApp\GameApp\bin\Debug\net5.0\testcentric.engine.metadata.dll
+D:\The Game\GameApp\GameApp\bin\Debug\net5.0\nunit.framework.dll
