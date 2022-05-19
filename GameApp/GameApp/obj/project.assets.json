@@ -46,6 +46,48 @@
         "build": {
           "build/netcoreapp2.1/NUnit3TestAdapter.props": {}
         }
+      },
+      "raylib/4.0.0.6": {
+        "type": "package"
+      },
+      "Raylib-cs/4.0.0.1": {
+        "type": "package",
+        "dependencies": {
+          "System.Numerics.Vectors": "4.5.0"
+        },
+        "compile": {
+          "lib/net5.0/Raylib-cs.dll": {}
+        },
+        "runtime": {
+          "lib/net5.0/Raylib-cs.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/libraylib.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/osx-x64/native/libraylib.dylib": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          },
+          "runtimes/win-x64/native/raylib.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x86/native/raylib.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          }
+        }
+      },
+      "System.Numerics.Vectors/4.5.0": {
+        "type": "package",
+        "compile": {
+          "ref/netcoreapp2.0/_._": {}
+        },
+        "runtime": {
+          "lib/netcoreapp2.0/_._": {}
+        }
       }
     }
   },
@@ -243,12 +285,153 @@
         "nunit3testadapter.4.2.1.nupkg.sha512",
         "nunit3testadapter.nuspec"
       ]
+    },
+    "raylib/4.0.0.6": {
+      "sha512": "eWHSK9YcR3ewVHu8FbMnnX8pT3WGBDaDf8CjKMamqbpfKnoAnLndDKZoCeOY0rfPeoSpgPu1j+JO4ORvvbKW6w==",
+      "type": "package",
+      "path": "raylib/4.0.0.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/native/LICENSE",
+        "build/native/README.md",
+        "build/native/include/AudioDevice.hpp",
+        "build/native/include/AudioStream.hpp",
+        "build/native/include/BoundingBox.hpp",
+        "build/native/include/Camera2D.hpp",
+        "build/native/include/Camera3D.hpp",
+        "build/native/include/Color.hpp",
+        "build/native/include/Font.hpp",
+        "build/native/include/Functions.hpp",
+        "build/native/include/Gamepad.hpp",
+        "build/native/include/Image.hpp",
+        "build/native/include/Material.hpp",
+        "build/native/include/Matrix.hpp",
+        "build/native/include/Mesh.hpp",
+        "build/native/include/Model.hpp",
+        "build/native/include/ModelAnimation.hpp",
+        "build/native/include/Mouse.hpp",
+        "build/native/include/Music.hpp",
+        "build/native/include/Physics.hpp",
+        "build/native/include/Ray.hpp",
+        "build/native/include/RayCollision.hpp",
+        "build/native/include/RaylibException.hpp",
+        "build/native/include/Rectangle.hpp",
+        "build/native/include/RenderTexture.hpp",
+        "build/native/include/Shader.hpp",
+        "build/native/include/Sound.hpp",
+        "build/native/include/Texture.hpp",
+        "build/native/include/Vector2.hpp",
+        "build/native/include/Vector3.hpp",
+        "build/native/include/Vector4.hpp",
+        "build/native/include/VrStereoConfig.hpp",
+        "build/native/include/Wave.hpp",
+        "build/native/include/Window.hpp",
+        "build/native/include/extras/easings.h",
+        "build/native/include/extras/gui_textbox_extended.h",
+        "build/native/include/extras/physac.h",
+        "build/native/include/extras/rlights.h",
+        "build/native/include/extras/rmem.h",
+        "build/native/include/extras/rpng.h",
+        "build/native/include/extras/rres-raylib.h",
+        "build/native/include/extras/rres.h",
+        "build/native/include/physac.hpp",
+        "build/native/include/raygui.h",
+        "build/native/include/raylib-cpp-utils.hpp",
+        "build/native/include/raylib-cpp.hpp",
+        "build/native/include/raylib.h",
+        "build/native/include/raylib.hpp",
+        "build/native/include/raymath.h",
+        "build/native/include/raymath.hpp",
+        "build/native/include/rlgl.h",
+        "build/native/lib/win32/raylib.dll",
+        "build/native/lib/win32/raylib.lib",
+        "build/native/lib/win32/raylibdll.lib",
+        "build/native/lib/x64/raylib.dll",
+        "build/native/lib/x64/raylib.lib",
+        "build/native/lib/x64/raylibdll.lib",
+        "build/native/raylib.targets",
+        "build/native/raylibUI.xml",
+        "build/native/raylib_128x128.png",
+        "raylib.4.0.0.6.nupkg.sha512",
+        "raylib.nuspec"
+      ]
+    },
+    "Raylib-cs/4.0.0.1": {
+      "sha512": "P8VqY5UsEawOoWElEcLNmLu08zOpvkk5C7eI0OKR8fDL7v6bPkFchC8iUJI47BgPq0lYsQbnMeEOe2bz/HZ5bA==",
+      "type": "package",
+      "path": "raylib-cs/4.0.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net5.0/Raylib-cs.dll",
+        "lib/net5.0/Raylib-cs.xml",
+        "lib/net6.0/Raylib-cs.dll",
+        "lib/net6.0/Raylib-cs.xml",
+        "raylib-cs.4.0.0.1.nupkg.sha512",
+        "raylib-cs.nuspec",
+        "raylib-cs_64x64.png",
+        "runtimes/linux-x64/native/libraylib.so",
+        "runtimes/osx-x64/native/libraylib.dylib",
+        "runtimes/win-x64/native/raylib.dll",
+        "runtimes/win-x86/native/raylib.dll"
+      ]
+    },
+    "System.Numerics.Vectors/4.5.0": {
+      "sha512": "QQTlPTl06J/iiDbJCiepZ4H//BVraReU4O4EoRw1U02H5TLUIT7xn3GnDp9AXPSlJUDyFs4uWjWafNX6WrAojQ==",
+      "type": "package",
+      "path": "system.numerics.vectors/4.5.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net46/System.Numerics.Vectors.dll",
+        "lib/net46/System.Numerics.Vectors.xml",
+        "lib/netcoreapp2.0/_._",
+        "lib/netstandard1.0/System.Numerics.Vectors.dll",
+        "lib/netstandard1.0/System.Numerics.Vectors.xml",
+        "lib/netstandard2.0/System.Numerics.Vectors.dll",
+        "lib/netstandard2.0/System.Numerics.Vectors.xml",
+        "lib/portable-net45+win8+wp8+wpa81/System.Numerics.Vectors.dll",
+        "lib/portable-net45+win8+wp8+wpa81/System.Numerics.Vectors.xml",
+        "lib/uap10.0.16299/_._",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/net45/System.Numerics.Vectors.dll",
+        "ref/net45/System.Numerics.Vectors.xml",
+        "ref/net46/System.Numerics.Vectors.dll",
+        "ref/net46/System.Numerics.Vectors.xml",
+        "ref/netcoreapp2.0/_._",
+        "ref/netstandard1.0/System.Numerics.Vectors.dll",
+        "ref/netstandard1.0/System.Numerics.Vectors.xml",
+        "ref/netstandard2.0/System.Numerics.Vectors.dll",
+        "ref/netstandard2.0/System.Numerics.Vectors.xml",
+        "ref/uap10.0.16299/_._",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "ref/xamarintvos10/_._",
+        "ref/xamarinwatchos10/_._",
+        "system.numerics.vectors.4.5.0.nupkg.sha512",
+        "system.numerics.vectors.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
     }
   },
   "projectFileDependencyGroups": {
     "net5.0": [
       "NUnit >= 3.13.3",
-      "NUnit3TestAdapter >= 4.2.1"
+      "NUnit3TestAdapter >= 4.2.1",
+      "Raylib-cs >= 4.0.0.1",
+      "raylib >= 4.0.0.6"
     ]
   },
   "packageFolders": {
@@ -302,6 +485,14 @@
           "NUnit3TestAdapter": {
             "target": "Package",
             "version": "[4.2.1, )"
+          },
+          "Raylib-cs": {
+            "target": "Package",
+            "version": "[4.0.0.1, )"
+          },
+          "raylib": {
+            "target": "Package",
+            "version": "[4.0.0.6, )"
           }
         },
         "imports": [

@@ -7,11 +7,12 @@ namespace SwordAndGun
 {
     public static class Controller
     {
-        static Dictionary<KeyboardKey, Vector2> PlayerMovements = new Dictionary<KeyboardKey, Vector2>() 
+        private static float speedPerFrame = 6;
+        private static Dictionary<KeyboardKey, Vector2> PlayerMovements = new Dictionary<KeyboardKey, Vector2>() 
         {
-            { KeyboardKey.KEY_D, new Vector2(4, 0) },
-            { KeyboardKey.KEY_A, new Vector2(-4, 0) },
-            { KeyboardKey.KEY_SPACE, new Vector2(0, -60) }
+            { KeyboardKey.KEY_D, new Vector2(speedPerFrame, 0) },
+            { KeyboardKey.KEY_A, new Vector2(-speedPerFrame, 0) },
+            { KeyboardKey.KEY_SPACE, new Vector2(0, -100) }
         };
         public static void OnKeyDowned(KeyboardKey key, Player player)
         {
@@ -20,7 +21,7 @@ namespace SwordAndGun
 
         public static void CheckInputs(Player player)
         {
-            if (IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_RIGHT))
+            if (IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT))
             {
                 player.Atack();
             }
@@ -34,7 +35,7 @@ namespace SwordAndGun
             }
             if (IsKeyDown(KeyboardKey.KEY_SPACE) && player.CanBeMoved)
             {
-                player.CanBeMoved = false;
+                player.Jump();
                 OnKeyDowned(KeyboardKey.KEY_SPACE, player);
             }
         }

@@ -5,8 +5,6 @@ D:\The Game\GameApp\GameApp\bin\Debug\net5.0\GameApp.runtimeconfig.dev.json
 D:\The Game\GameApp\GameApp\bin\Debug\net5.0\GameApp.dll
 D:\The Game\GameApp\GameApp\bin\Debug\net5.0\GameApp.pdb
 D:\The Game\GameApp\GameApp\bin\Debug\net5.0\Raylib-cs.dll
-D:\The Game\GameApp\GameApp\bin\Debug\net5.0\Raylib-cs.pdb
-D:\The Game\GameApp\GameApp\bin\Debug\net5.0\Raylib-cs.xml
 D:\The Game\GameApp\GameApp\obj\Debug\net5.0\GameApp.csproj.AssemblyReference.cache
 D:\The Game\GameApp\GameApp\obj\Debug\net5.0\GameApp.GeneratedMSBuildEditorConfig.editorconfig
 D:\The Game\GameApp\GameApp\obj\Debug\net5.0\GameApp.AssemblyInfoInputs.cache
@@ -25,3 +23,7 @@ D:\The Game\GameApp\GameApp\bin\Debug\net5.0\nunit.engine.api.dll
 D:\The Game\GameApp\GameApp\bin\Debug\net5.0\nunit.engine.core.dll
 D:\The Game\GameApp\GameApp\bin\Debug\net5.0\testcentric.engine.metadata.dll
 D:\The Game\GameApp\GameApp\bin\Debug\net5.0\nunit.framework.dll
+D:\The Game\GameApp\GameApp\bin\Debug\net5.0\runtimes\linux-x64\native\libraylib.so
+D:\The Game\GameApp\GameApp\bin\Debug\net5.0\runtimes\osx-x64\native\libraylib.dylib
+D:\The Game\GameApp\GameApp\bin\Debug\net5.0\runtimes\win-x64\native\raylib.dll
+D:\The Game\GameApp\GameApp\bin\Debug\net5.0\runtimes\win-x86\native\raylib.dll

@@ -8,63 +8,96 @@ namespace SwordAndGun
 {
     public static class World
     {
-        public static Vector2 GravityForce { get; set; } = new Vector2(0, 3);
+        public static Vector2 GravityForce { get; } = new Vector2(0, 3);
+        public static float Time { get; set; } = 0;
         private static List<Rectangle> platforms = new List<Rectangle>();
-        private static float windage = 2;
+        private static float windageParametr = 0.1f;
+        private static float frictinParametr = 0.2f;
 
-        public static void MoveAlongPhysics(IMoveable obj)
+        public static void AlongPhysics(IMoveable obj)
         {
-            foreach (var platform in platforms)
-            {
-                if (!CheckCollisionRecs(obj.GetHitBox(), platform))
-                    obj.Velocity += GravityForce;
-            }
-        }
+            var collider = CheckWorldCollision(obj);
+            if (collider == null)
+                AlongGravity(obj);
+            else
+                Collise(obj, collider.Value);
 
-        public static void Collise(IMoveable obj)
-        {
-            var hitbox = obj.GetHitBox();
-            foreach (var platform in platforms)
-            {
-                if (CheckCollisionRecs(hitbox, platform))
-                {
-                    obj.Velocity = new Vector2(obj.Velocity.X, 0);
-                    obj.Move(hitbox.x, platform.y - hitbox.height);
-                    obj.CanBeMoved = true;
-                }
-            }
-        }
+            if (!obj.CanBeMoved)
+                AlongWindage(obj);
+            else
+                AlongFriction(obj);
 
-        public static void AlongWindage(IMoveable obj)
-        {
-            var velocity = obj.Velocity;
-            if (velocity != Vector2.Zero)
-            {
-                if (velocity.X > 0)
-                    obj.Velocity -= Vector2.UnitX * windage;
-                if (velocity.X < 0)
-                    obj.Velocity += Vector2.UnitX * windage;
-                if (velocity.Y > 0)
-                    obj.Velocity -= Vector2.UnitY * windage;
-                if (velocity.Y < 0)
-                    obj.Velocity += Vector2.UnitY * windage;
-            }
+            ClampVelocityToZero(obj);
         }
 
         public static void CreatePlatform(Rectangle platform)
         {
             platforms.Add(platform);
         }
+
+        public static void ClampVelocityToZero(IMoveable obj)
+        {
+            var epsilon = 1;
+            if(Math.Abs(obj.Velocity.X) <= epsilon)
+            {
+                obj.Velocity = new Vector2(0, obj.Velocity.Y);
+            }
+            if(Math.Abs(obj.Velocity.Y) <= epsilon)
+            {
+                obj.Velocity = new Vector2(obj.Velocity.X, 0);
+            }
+        }
+        private static void AlongGravity(IMoveable obj)
+        {
+            obj.Velocity += GravityForce;
+        }
+
+        private static Rectangle? CheckWorldCollision(IMoveable obj)
+        {
+            foreach(var platform in platforms)
+            {
+                if (CheckCollisionRecs(obj.GetHitBox(), platform))
+                    return platform;
+            }
+            return null;
+        }
+
+        private static void Collise(IMoveable obj, Rectangle Collider)
+        {
+            obj.Velocity = new Vector2(obj.Velocity.X, 0);
+            obj.Move(obj.GetHitBox().x, Collider.y - obj.GetHitBox().height + 1);
+            obj.CanBeMoved = true;
+        }
+
+        private static void AlongWindage(IMoveable obj)
+        {
+            var windageForce = obj.Velocity * obj.Velocity * 0.05f * windageParametr;
+
+            var parY = GetDirection(obj.Velocity.Y);
+            obj.Velocity += windageForce * new Vector2(0, -parY);
+        }
+        private static void AlongFriction(IMoveable obj)
+        {
+            obj.Velocity -= new Vector2(obj.Velocity.X * frictinParametr, 0);
+        }
+
+        private static float GetDirection(float x)
+        {
+            return x == 0 ? 0 : x / Math.Abs(x);
+        }
     }
+
     public class Player : IMoveable
     {
         private Vector2 velocity;
-        private int maxVelocity = 15;
 
         public Vector2 Velocity
         {
             get { return velocity; }
-            set { if (Math.Abs(value.X) < maxVelocity) velocity = value; }
+            set 
+            {
+                velocity = value;
+            }
         }
         public Rectangle HitBox;
 
@@ -79,12 +112,10 @@ namespace SwordAndGun
 
         public void Move()
         {
+            World.AlongPhysics(this);
+
             HitBox.x += Velocity.X * GetFrameTime() * 60;
             HitBox.y += Velocity.Y * GetFrameTime() * 60;
-
-            World.AlongWindage(this);
-
-            World.Collise(this);
         }
 
         public Rectangle GetHitBox()
@@ -100,7 +131,14 @@ namespace SwordAndGun
 
         public void Atack()
         {
+            Velocity = Vector2.Zero;
             IsAtacking = true;
+        }
+
+        public void Jump()
+        {
+            CanBeMoved = false;
+            Move(HitBox.x, HitBox.y - 2);
         }
     }
 }

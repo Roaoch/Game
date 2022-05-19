@@ -51,6 +51,14 @@
             "NUnit3TestAdapter": {
               "target": "Package",
               "version": "[4.2.1, )"
+            },
+            "Raylib-cs": {
+              "target": "Package",
+              "version": "[4.0.0.1, )"
+            },
+            "raylib": {
+              "target": "Package",
+              "version": "[4.0.0.6, )"
             }
           },
           "imports": [

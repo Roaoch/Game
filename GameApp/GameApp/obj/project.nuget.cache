@@ -1,13 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "HQFASXHX3bNWxxESF66AgMTERSpl45CJn5w0V08ut4Bj8F1Tf4ptElxJWZlYw7Lsri6X6mMd/MhgZwrg1iWY7Q==",
+  "dgSpecHash": "uB6nwj8eHeK23tZtWt0jgAcgrWhTMVpREgKlfVNHzS74eJ9btp/d9gu1vq6xJ7jmPt80iDNoJfvgLwvJW8B8hw==",
   "success": true,
   "projectFilePath": "D:\\The Game\\GameApp\\GameApp\\GameApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Рустам\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\Рустам\\.nuget\\packages\\netstandard.library\\2.0.0\\netstandard.library.2.0.0.nupkg.sha512",
     "C:\\Users\\Рустам\\.nuget\\packages\\nunit\\3.13.3\\nunit.3.13.3.nupkg.sha512",
-    "C:\\Users\\Рустам\\.nuget\\packages\\nunit3testadapter\\4.2.1\\nunit3testadapter.4.2.1.nupkg.sha512"
+    "C:\\Users\\Рустам\\.nuget\\packages\\nunit3testadapter\\4.2.1\\nunit3testadapter.4.2.1.nupkg.sha512",
+    "C:\\Users\\Рустам\\.nuget\\packages\\raylib\\4.0.0.6\\raylib.4.0.0.6.nupkg.sha512",
+    "C:\\Users\\Рустам\\.nuget\\packages\\raylib-cs\\4.0.0.1\\raylib-cs.4.0.0.1.nupkg.sha512",
+    "C:\\Users\\Рустам\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512"
   ],
   "logs": []
 }

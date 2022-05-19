@@ -8,7 +8,6 @@ namespace SwordAndGun
     {
         public Texture2D Texture;
         public Rectangle TextureBox;
-        public static float Time = 0;
         public int Currentframe = 0;
         public int MaxFrameCount;
         public float TimePerFrame;
@@ -24,22 +23,18 @@ namespace SwordAndGun
 
     public static class Drawer
     {
-        //private static Texture2D playerTexture = LoadTexture(@".\Texture\Walk.png");
-        //private static Rectangle playerTextureBox = new Rectangle(0, 0, 300, 512);
-        //private static float timer = 0;
-        //private static float frame = 0;
-
         public static void Initialize()
         {
             InitWindow(1280, 720, "Hello World");
             SetWindowState(ConfigFlags.FLAG_WINDOW_RESIZABLE);
             SetWindowState(ConfigFlags.FLAG_VSYNC_HINT);
+            SetTargetFPS(60);
 
-            var playerWalk = new Animation(@".\Texture\Walk.png", 3, 0.1f);
-            var playerAtack = new Animation(@".\Texture\Atack.png", 4, 0.5f);
+            var playerWalk = new Animation(@".\Texture\Walk.png", 3, 0.2f);
+            var playerAtack = new Animation(@".\Texture\Atack.png", 4, 0.6f);
 
             var player = new Player();
-            var ground = new Rectangle(0, 600, GetScreenWidth(), 40);
+            var ground = new Rectangle(0, 600, 1920, 40);
             World.CreatePlatform(ground);
 
             while (!WindowShouldClose())
@@ -47,14 +42,13 @@ namespace SwordAndGun
                 BeginDrawing();
                 {
                     ClearBackground(Color.WHITE);
-                    Animation.Time += GetFrameTime();
+                    World.Time += GetFrameTime();
 
                     if (!player.IsAtacking)
                     {
                         Controller.CheckInputs(player);
                     }
 
-                    World.MoveAlongPhysics(player);
                     player.Move();
 
                     if (player.IsAtacking)
@@ -78,6 +72,8 @@ namespace SwordAndGun
                     }
 
                     DrawFPS(10, 10);
+                    DrawText(player.Velocity.ToString(), 10, 30, 20, Color.LIME);
+                    DrawText(player.HitBox.ToString(), 10, 50, 20, Color.LIME);
                     DrawRectangleRec(player.HitBox, new Color(255, 0, 0, 50));
                     DrawRectangleRec(ground, Color.BLACK);
                 }
@@ -89,9 +85,9 @@ namespace SwordAndGun
 
         private static void DrawPlayer(Player player, Animation animation)
         {
-            if (Animation.Time >= 0.35)
+            if (World.Time >= animation.TimePerFrame)
             {
-                Animation.Time = 0;
+                World.Time = 0;
                 animation.Currentframe++;
             }
 
@@ -99,11 +95,13 @@ namespace SwordAndGun
 
             animation.TextureBox.x = animation.TextureBox.width * animation.Currentframe;
 
-            DrawTexturePro(animation.Texture, 
-                animation.TextureBox, 
-                player.HitBox, 
-                Vector2.Zero, 
-                0, 
+            var c = player.HitBox.height / animation.TextureBox.height;
+
+            DrawTexturePro(animation.Texture,
+                animation.TextureBox,
+                new Rectangle(player.HitBox.x, player.HitBox.y, animation.TextureBox.width * c, animation.TextureBox.height * c),
+                Vector2.Zero,
+                0,
                 Color.RAYWHITE);
         }
     }
