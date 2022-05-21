@@ -8,7 +8,7 @@ public interface IMoveable
     bool CanBeMoved { get; set; }
 
     Rectangle GetHitBox();
-    void Move();
+    void Move(Vector2 vector);
     void Move(float x, float y);
     
 }

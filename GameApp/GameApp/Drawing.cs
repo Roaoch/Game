@@ -4,23 +4,6 @@ using System.Numerics;
 
 namespace SwordAndGun
 {
-    public class Animation
-    {
-        public Texture2D Texture;
-        public Rectangle TextureBox;
-        public int Currentframe = 0;
-        public int MaxFrameCount;
-        public float TimePerFrame;
-
-        public Animation(string path, int frameCount, float timePerFrame)
-        {
-            Texture = LoadTexture(path);
-            TextureBox = new Rectangle(0, 0, Texture.width / frameCount, Texture.height);
-            MaxFrameCount = frameCount;
-            TimePerFrame = timePerFrame;
-        }
-    }
-
     public static class Drawer
     {
         public static void Initialize()
@@ -57,7 +40,7 @@ namespace SwordAndGun
                         if (playerAtack.Currentframe == playerAtack.MaxFrameCount - 1)
                             player.IsAtacking = false;
                     }
-                    else if (player.Velocity.X != 0)
+                    else if (player.IsMoving && player.CanBeMoved)
                     {
                         DrawPlayer(player, playerWalk);
                     }

@@ -16,7 +16,7 @@ namespace SwordAndGun
         };
         public static void OnKeyDowned(KeyboardKey key, Player player)
         {
-            player.Velocity += PlayerMovements[key];
+            player.Move(PlayerMovements[key]);
         }
 
         public static void CheckInputs(Player player)
