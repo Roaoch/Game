@@ -6,6 +6,8 @@ public interface IMoveable
 {
     Vector2 Velocity { get; set; }
     bool CanBeMoved { get; set; }
+    bool HaveNoClip { get; set; }
+
 
     Rectangle GetHitBox();
     void Move(Vector2 vector);

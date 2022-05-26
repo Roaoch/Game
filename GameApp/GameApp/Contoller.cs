@@ -8,7 +8,7 @@ namespace SwordAndGun
     public static class Controller
     {
         private static float speedPerFrame = 6;
-        private static Dictionary<KeyboardKey, Vector2> PlayerMovements = new Dictionary<KeyboardKey, Vector2>() 
+        private readonly static Dictionary<KeyboardKey, Vector2> PlayerMovements = new Dictionary<KeyboardKey, Vector2>() 
         {
             { KeyboardKey.KEY_D, new Vector2(speedPerFrame, 0) },
             { KeyboardKey.KEY_A, new Vector2(-speedPerFrame, 0) },
@@ -37,6 +37,10 @@ namespace SwordAndGun
             {
                 player.Jump();
                 OnKeyDowned(KeyboardKey.KEY_SPACE, player);
+            }
+            if(IsKeyPressed(KeyboardKey.KEY_LEFT_CONTROL))
+            {
+                player.ToggleNoClip();
             }
         }
     }

@@ -6,18 +6,23 @@ using System.Collections.Generic;
 
 namespace SwordAndGun
 {
-    public static class World
+    public class World
     {
-        public static Vector2 GravityForce { get; } = new Vector2(0, 3);
-        public static float Time { get; set; } = 0;
-        private static List<Rectangle> platforms = new List<Rectangle>();
-        private static float windageParametr = 0.1f;
-        private static float frictinParametr = 0.2f;
+        public Vector2 GravityForce { get; } = new Vector2(0, 3);
+        public float Time { get; set; } = 0;
+        public List<Rectangle> WorldPlatforms { get; }
+        private float windageParametr = 0.1f;
+        private float frictinParametr = 0.2f;
 
-        public static void AlongPhysics(IMoveable obj)
+        public World(List<Rectangle> platforms)
+        {
+            WorldPlatforms = platforms;
+        }
+
+        public void AlongPhysics(IMoveable obj)
         {
             var collider = CheckWorldCollision(obj);
-            if (collider == null)
+            if (obj.HaveNoClip || collider == null)
                 AlongGravity(obj);
             else
                 Collise(obj, collider.Value);
@@ -30,12 +35,7 @@ namespace SwordAndGun
             ClampVelocityToZero(obj);
         }
 
-        public static void CreatePlatform(Rectangle platform)
-        {
-            platforms.Add(platform);
-        }
-
-        public static void ClampVelocityToZero(IMoveable obj)
+        public void ClampVelocityToZero(IMoveable obj)
         {
             var epsilon = 1;
             if(Math.Abs(obj.Velocity.X) <= epsilon)
@@ -47,14 +47,14 @@ namespace SwordAndGun
                 obj.Velocity = new Vector2(obj.Velocity.X, 0);
             }
         }
-        private static void AlongGravity(IMoveable obj)
+        private void AlongGravity(IMoveable obj)
         {
             obj.Velocity += GravityForce;
         }
 
-        private static Rectangle? CheckWorldCollision(IMoveable obj)
+        private Rectangle? CheckWorldCollision(IMoveable obj)
         {
-            foreach(var platform in platforms)
+            foreach (var platform in WorldPlatforms)
             {
                 if (CheckCollisionRecs(obj.GetHitBox(), platform))
                     return platform;
@@ -62,26 +62,27 @@ namespace SwordAndGun
             return null;
         }
 
-        private static void Collise(IMoveable obj, Rectangle Collider)
+        private void Collise(IMoveable obj, Rectangle Collider)
         {
             obj.Velocity = new Vector2(obj.Velocity.X, 0);
             obj.Move(obj.GetHitBox().x, Collider.y - obj.GetHitBox().height + 1);
             obj.CanBeMoved = true;
         }
 
-        private static void AlongWindage(IMoveable obj)
+        private void AlongWindage(IMoveable obj)
         {
             var windageForce = obj.Velocity * obj.Velocity * 0.05f * windageParametr;
 
             var parY = GetDirection(obj.Velocity.Y);
-            obj.Velocity += windageForce * new Vector2(0, -parY);
+            var parX = GetDirection(obj.Velocity.X);
+            obj.Velocity += windageForce * new Vector2(-parX, -parY);
         }
-        private static void AlongFriction(IMoveable obj)
+        private void AlongFriction(IMoveable obj)
         {
             obj.Velocity -= new Vector2(obj.Velocity.X * frictinParametr, 0);
         }
 
-        private static float GetDirection(float x)
+        private float GetDirection(float x)
         {
             return x == 0 ? 0 : x / Math.Abs(x);
         }

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,12 +11,6 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="raylib" Version="4.0.0.6" />
     <PackageReference Include="Raylib-cs" Version="4.0.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Raylib-cs">
-      <HintPath>..\..\Raylib-cs-master\Raylib-cs\bin\Debug\net5.0\Raylib-cs.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
