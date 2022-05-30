@@ -9,12 +9,14 @@ namespace SwordAndGun
     public class EnemyHiveMind
     {
         public List<Enemy> AllEnemies { get; private set; }
-        private readonly MovementForLevel[,] MapLikeMovements;
 
-        public EnemyHiveMind(List<Enemy> enemies, string movementsMap)
+        private readonly Vector2 jumpVelocity = new Vector2(10, 100);
+        private readonly Vector2 walkVelocity = new Vector2(10, 0);
+        private readonly Vector2 climbUpVelocity = new Vector2(0, 100);
+
+        public EnemyHiveMind(List<Enemy> enemies)
         {
             AllEnemies = enemies;
-            MapLikeMovements = StringToMovementForLevelMap(movementsMap);
         }
 
         public void Update(World world, Player player)
@@ -26,7 +28,9 @@ namespace SwordAndGun
             {
                 enemy.Update(world);
                 CheckPlayerHit(enemy, player);
+                GoToPlayer(enemy, enemy.PathToPlayer(player), player);
             }
+            AllEnemies[0].PathToPlayer(player);
         }
 
         private void CheckPlayerHit(Enemy enemy, Player player)
@@ -37,31 +41,14 @@ namespace SwordAndGun
             }
         }
 
-        private MovementForLevel[,] StringToMovementForLevelMap(string movements)
+        private void GoToPlayer(Enemy enemy, LinkedList<(int, int)> path, Player player)
         {
-            var splitedMovements = movements.Split("\r\n");
-            var result = new MovementForLevel[splitedMovements[0].Length, splitedMovements.Length];
-            for(var i = 0; i < splitedMovements[0].Length; i++)
-                for(var j = 0; j < splitedMovements.Length; j++)
-                {
-                    switch(splitedMovements[j][i])
-                    {
-                        case 'N':
-                            result[i, j] = MovementForLevel.NoMovement;
-                            break;
-                        case 'C':
-                            result[i, j] = MovementForLevel.Climb;
-                            break;
-                        case 'W':
-                            result[i, j] = MovementForLevel.Walk;
-                            break;
-                        case 'J':
-                            result[i, j] = MovementForLevel.Jump;
-                            break;
-                    }
-                }
-
-            return result;
+            var previouse = path.First.Value;
+            var previouseMovement = Map.MapLikeMovements[previouse.Item1, previouse.Item2];
+            foreach(var point in path.Skip(1))
+            {
+                
+            }
         }
     }
 }

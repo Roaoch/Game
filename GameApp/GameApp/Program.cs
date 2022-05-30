@@ -7,12 +7,12 @@ namespace SwordAndGun
     static class Program
     {
         public static Level level1 = new Level(
-            new Player(700, 1844),
+            new Player(350, 1844),
             new List<Enemy> 
             {
-                new Enemy(1400, 1844),
+                new Enemy(1050, 1844),
                 new Enemy(3150, 1844),
-                new Enemy(2800, 1144),
+                new Enemy(2450, 1144),
                 new Enemy(0, 794),
                 new Enemy(3500, 444)
             },
