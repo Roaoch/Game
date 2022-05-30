@@ -12,7 +12,7 @@ namespace Tests
         [Test]
         public void PlayerBasicMovementTest()
         {
-            var player = new Player();
+            var player = new Player(200, 200);
             Controller.OnKeyDowned(KeyboardKey.KEY_D, player);
             Thread.Sleep(100);
         }

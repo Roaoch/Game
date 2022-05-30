@@ -6,14 +6,14 @@ namespace SwordAndGun
 {
     public class Level
     {
-        public Player Player = new Player();
+        public Player Player;
         public EnemyHiveMind EnemyHiveMind;
         public World World;
 
-        public Level(Player player, List<Enemy> enemies, List<Rectangle> platforms)
+        public Level(Player player, List<Enemy> enemies, List<Rectangle> platforms, string MovemntsMap)
         {
             Player = player;
-            EnemyHiveMind = new EnemyHiveMind(enemies);
+            EnemyHiveMind = new EnemyHiveMind(enemies, MovemntsMap);
             World = new World(platforms);
         }
     }

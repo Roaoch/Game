@@ -33,12 +33,12 @@ namespace SwordAndGun
             {
                 OnKeyDowned(KeyboardKey.KEY_A, player);
             }
-            if (IsKeyDown(KeyboardKey.KEY_SPACE) && player.CanBeMoved)
+            if (IsKeyPressed(KeyboardKey.KEY_SPACE) && player.CanBeMoved)
             {
                 player.Jump();
                 OnKeyDowned(KeyboardKey.KEY_SPACE, player);
             }
-            if(IsKeyPressed(KeyboardKey.KEY_LEFT_CONTROL))
+            if (IsKeyPressed(KeyboardKey.KEY_LEFT_CONTROL))
             {
                 player.ToggleNoClip();
             }

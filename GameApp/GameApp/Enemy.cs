@@ -1,6 +1,7 @@
 ﻿using Raylib_cs;
 using static Raylib_cs.Raylib;
 using System.Numerics;
+using System.Collections.Generic;
 using System;
 
 namespace SwordAndGun
@@ -13,12 +14,13 @@ namespace SwordAndGun
         public Vector2 Velocity { get => velocity; set => velocity = value; }
         public Rectangle HitBox;
         public Rectangle AtackBox;
-        public float Hp { get => hp; set => /*Math.Clamp(value, 0, 100)*/hp = value; }
+        public float Hp { get => hp; set => hp = Math.Clamp(value, 0, 100); }
         public float AtackPower { get; set; } = 50;
 
         public bool CanBeMoved { get; set; }
         public bool IsAtacking { get; set; }
         public bool IsMoving { get => velocity != Vector2.Zero; }
+
         public bool HaveNoClip { get; set; } = false;
 
         public Enemy(float x, float y)
@@ -70,6 +72,11 @@ namespace SwordAndGun
         public void ToggleNoClip()
         {
             HaveNoClip = !HaveNoClip;
+        }
+
+        private List<MovementForLevel> PathToPlayer(Player player)
+        {
+            throw new ArgumentException();
         }
     }
 }

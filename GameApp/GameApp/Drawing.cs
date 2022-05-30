@@ -7,10 +7,10 @@ namespace SwordAndGun
     public static class Drawer
     {
         private static Level Level;
-        private static Animation PlayerWalk = new Animation(@"../../../Texture/Walk.png", 3, 0.2f);
-        public static Animation PlayerAtack = new Animation(@"../../../Texture/Atack.png", 4, 0.6f);
-        private static Animation EnemyWalk = new Animation(@"../../../Texture/EnemyWalk.png", 3, 0.2f);
 
+        private static Animation PlayerWalk = new Animation(@"../../../Texture/Walk.png", 3, 0.2f);
+        public static Animation PlayerAtack = new Animation(@"../../../Texture/Atack.png", 4, 0.5f);
+        private static Animation EnemyWalk = new Animation(@"../../../Texture/EnemyWalk.png", 3, 0.2f);
 
         public static void Initialize(Level level)
         {
@@ -25,68 +25,82 @@ namespace SwordAndGun
             var world = Level.World;
             var player = Level.Player;
 
-            var enemy1 = enemyHiveMind.AllEnemies[0];
-            var ground = world.WorldPlatforms[0];
-            var platform1 = world.WorldPlatforms[1];
+            var camera = new Camera2D();
+            camera.zoom = 0.78f;
 
             while (!WindowShouldClose())
             {
                 BeginDrawing();
                 {
-                    ClearBackground(Color.WHITE);
-                    world.Time += GetFrameTime();
-
-                    if (!player.IsAtacking)
+                    BeginMode2D(camera);
                     {
-                        Controller.CheckInputs(player);
-                    }
+                        camera.target = CameraToPlayer(camera, player);
 
-                    player.Update(world);
-                    enemyHiveMind.Update(world, player);
+                        ClearBackground(Color.WHITE);
+                        world.Time += GetFrameTime();
 
-                    if (player.IsAtacking)
-                    {
-                        DrawPlayer(player, PlayerAtack);
-                        if (PlayerAtack.Currentframe == PlayerAtack.MaxFrameCount - 1)
-                            player.IsAtacking = false;
-                    }
-                    else if (player.IsMoving && player.CanBeMoved)
-                    {
-                        DrawPlayer(player, PlayerWalk);
-                    }
-                    else
-                    {
-                        DrawTexturePro(PlayerWalk.Texture,
-                            new Rectangle(0, 0, PlayerWalk.TextureBox.width, PlayerWalk.TextureBox.height),
-                            player.HitBox,
-                            Vector2.Zero,
-                            0,
-                            Color.RAYWHITE);
-                    }
+                        if (!player.IsAtacking)
+                        {
+                            Controller.CheckInputs(player);
+                        }
 
-                    if (enemy1.IsMoving && enemy1.CanBeMoved)
-                    {
-                        DrawEnemy(enemy1, EnemyWalk);
-                    }
-                    else
-                    {
-                        DrawTexturePro(EnemyWalk.Texture,
-                            new Rectangle(0, 0, EnemyWalk.TextureBox.width, EnemyWalk.TextureBox.height),
-                            enemy1.HitBox,
-                            Vector2.Zero,
-                            0,
-                            Color.RAYWHITE);
-                    }
+                        player.Update(world);
+                        enemyHiveMind.Update(world, player);
 
-                    DrawFPS(10, 10);
-                    DrawText(player.Velocity.ToString(), 10, 30, 20, Color.LIME);
-                    DrawText(player.HitBox.ToString(), 10, 50, 20, Color.LIME);
-                    DrawText(enemy1.Hp.ToString(), GetScreenWidth() - 60, 10, 20, Color.RED);
+                        if (player.IsAtacking)
+                        {
+                            DrawPlayer(player, PlayerAtack);
+                            if (PlayerAtack.Currentframe == PlayerAtack.MaxFrameCount - 1)
+                            {
+                                PlayerAtack.Currentframe = 0;
+                                player.IsAtacking = false;
+                            }
+                        }
+                        else if (player.IsMoving && player.CanBeMoved)
+                        {
+                            DrawPlayer(player, PlayerWalk);
+                        }
+                        else
+                        {
+                            DrawTexturePro(PlayerWalk.Texture,
+                                new Rectangle(0, 0, PlayerWalk.TextureBox.width, PlayerWalk.TextureBox.height),
+                                player.HitBox,
+                                Vector2.Zero,
+                                0,
+                                Color.RAYWHITE);
+                        }
 
-                    DrawRectangleRec(player.HitBox, new Color(255, 0, 0, 50));
-                    DrawRectangleRec(ground, Color.BLACK);
-                    DrawRectangleRec(player.AtackBox, new Color(230, 0, 0, 50));
-                    DrawRectangleRec(platform1, Color.BLACK);
+                        foreach (var enemy in enemyHiveMind.AllEnemies)
+                        {
+                            if (enemy.IsMoving && enemy.CanBeMoved)
+                            {
+                                DrawEnemy(enemy, EnemyWalk);
+                            }
+                            else
+                            {
+                                DrawTexturePro(EnemyWalk.Texture,
+                                    new Rectangle(0, 0, EnemyWalk.TextureBox.width, EnemyWalk.TextureBox.height),
+                                    enemy.HitBox,
+                                    Vector2.Zero,
+                                    0,
+                                    Color.RAYWHITE);
+                            }
+                        }
+
+                        foreach (var platform in world.WorldPlatforms)
+                        {
+                            DrawRectangleRec(platform, Color.DARKGRAY);
+                        }
+
+                        DrawFPS(10, 10);
+                        DrawText(player.Velocity.ToString(), 10, 30, 20, Color.LIME);
+                        DrawText(player.HitBox.ToString(), 10, 50, 20, Color.LIME);
+                        //DrawText(enemyHiveMind.AllEnemies[0].Hp.ToString(), GetScreenWidth() - 60, 10, 20, Color.RED);
+
+                        DrawRectangleRec(player.HitBox, new Color(255, 0, 0, 50));
+                        DrawRectangleRec(player.AtackBox, new Color(230, 0, 0, 50));
+                    }
+                    EndMode2D();
                 }
                 EndDrawing();
             }
@@ -136,6 +150,13 @@ namespace SwordAndGun
                 Vector2.Zero,
                 0,
                 Color.RAYWHITE);
+        }
+
+        private static Vector2 CameraToPlayer(Camera2D camera, Player player)
+        {
+            var x = player.HitBox.x - GetScreenWidth() / 4;
+            var y = player.HitBox.y - GetScreenHeight() / 2;
+            return (new Vector2(x, y) + camera.target) / 2;
         }
     }
 }

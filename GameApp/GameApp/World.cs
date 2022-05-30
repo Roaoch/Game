@@ -11,6 +11,8 @@ namespace SwordAndGun
         public Vector2 GravityForce { get; } = new Vector2(0, 3);
         public float Time { get; set; } = 0;
         public List<Rectangle> WorldPlatforms { get; }
+        public List<Rectangle> WorldWall { get; }
+
         private float windageParametr = 0.1f;
         private float frictinParametr = 0.2f;
 
@@ -54,9 +56,11 @@ namespace SwordAndGun
 
         private Rectangle? CheckWorldCollision(IMoveable obj)
         {
+            var sourceHitbox = obj.GetHitBox();
+            var hitBox = new Rectangle(sourceHitbox.x, sourceHitbox.y + (sourceHitbox.height / 4) * 3, sourceHitbox.width, sourceHitbox.height / 4);
             foreach (var platform in WorldPlatforms)
             {
-                if (CheckCollisionRecs(obj.GetHitBox(), platform))
+                if (CheckCollisionRecs(hitBox, platform))
                     return platform;
             }
             return null;
@@ -75,7 +79,7 @@ namespace SwordAndGun
 
             var parY = GetDirection(obj.Velocity.Y);
             var parX = GetDirection(obj.Velocity.X);
-            obj.Velocity += windageForce * new Vector2(-parX, -parY);
+            obj.Velocity += windageForce * new Vector2(-parX * 1.7f, -parY * 0.6f);
         }
         private void AlongFriction(IMoveable obj)
         {
