@@ -17,7 +17,7 @@ namespace SwordAndGun
         public Rectangle AtackBox;
         public float Hp { get => hp; set => Math.Clamp(value, 0, 100); }
         public float AtackPower { get; set; } = 100;
-        public Tuple<int, int> MapCoordinate { get; private set; }
+        public (int, int) MapCoordinate { get; private set; }
 
         public bool CanBeMoved { get; set; }
         public bool IsAtacking { get; set; }
@@ -28,7 +28,6 @@ namespace SwordAndGun
         {
             Velocity = new Vector2(0, 0);
             HitBox = new Rectangle(x, y, 256, 256);
-            AtackBox = default(Rectangle);
         }
 
         public void Move(Vector2 vector)

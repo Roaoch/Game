@@ -14,7 +14,7 @@ namespace SwordAndGun
         public Vector2 Velocity { get => velocity; set => velocity = value; }
         public Rectangle HitBox;
         public Rectangle AtackBox;
-        public Tuple<int, int> MapCoordinate { get; private set; }
+        public (int, int) MapCoordinate { get; private set; }
         public float Hp { get => hp; set => hp = Math.Clamp(value, 0, 100); }
         public float AtackPower { get; set; } = 50;
 
@@ -28,7 +28,6 @@ namespace SwordAndGun
         {
             Velocity = new Vector2(0, 0);
             HitBox = new Rectangle(x, y, 256, 256);
-            AtackBox = default(Rectangle);
         }
 
         public void Move(Vector2 vector)
@@ -77,9 +76,37 @@ namespace SwordAndGun
             HaveNoClip = !HaveNoClip;
         }
 
-        private List<MovementForLevel> PathToPlayer(Player player)
+        public LinkedList<(int, int)> PathToPlayer(Player player)
         {
-            throw new ArgumentException();
+            var searhIn = new Queue<(int, int)>();
+            var tracks = new Dictionary<(int, int), LinkedList<(int, int)>>();
+            var visited = new HashSet<(int, int)>();
+
+            searhIn.Enqueue(MapCoordinate);
+            visited.Add(MapCoordinate);
+            tracks.Add(MapCoordinate, new LinkedList<(int, int)>());
+
+            tracks[MapCoordinate].AddLast(MapCoordinate);
+
+            while (searhIn.Count != 0)
+            {
+                var point = searhIn.Dequeue();
+
+                foreach (var neighbour in Map.GetPossiableDirection(point))
+                {
+                    if (visited.Contains(neighbour))
+                        continue;
+
+                    visited.Add(neighbour);
+                    searhIn.Enqueue(neighbour);
+                    tracks.Add(neighbour, new LinkedList<(int, int)>(tracks[point]));
+                    tracks[neighbour].AddFirst(neighbour);
+                }
+                if (tracks.ContainsKey(player.MapCoordinate))
+                    break;
+            }
+
+            return tracks[player.MapCoordinate];
         }
     }
 }
