@@ -17,6 +17,7 @@ namespace SwordAndGun
         public Rectangle AtackBox;
         public float Hp { get => hp; set => Math.Clamp(value, 0, 100); }
         public float AtackPower { get; set; } = 100;
+        public Tuple<int, int> MapCoordinate { get; private set; }
 
         public bool CanBeMoved { get; set; }
         public bool IsAtacking { get; set; }
@@ -45,6 +46,8 @@ namespace SwordAndGun
 
             HitBox.x += Velocity.X * GetFrameTime() * 60;
             HitBox.y += Velocity.Y * GetFrameTime() * 60;
+
+            MapCoordinate = Map.GetCoordinate(this);
 
             localTime += GetFrameTime();
 
