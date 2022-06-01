@@ -10,11 +10,13 @@ namespace SwordAndGun
     {
         private Vector2 velocity;
         private float hp = 100;
+        public float LocalTime = 0;
 
         public Vector2 Velocity { get => velocity; set => velocity = value; }
         public Rectangle HitBox;
         public Rectangle AtackBox;
-        public (int, int) MapCoordinate { get; private set; }
+        public (int, int) MapCoordinate { get; set; }
+        public LinkedList<(int, int)> PathToPlayer { get; private set; } = new LinkedList<(int, int)>();
         public float Hp { get => hp; set => hp = Math.Clamp(value, 0, 100); }
         public float AtackPower { get; set; } = 50;
 
@@ -41,12 +43,18 @@ namespace SwordAndGun
         }
         public void Update(World world)
         {
+            LocalTime += GetFrameTime();
             world.AlongPhysics(this);
 
             HitBox.x += Velocity.X * GetFrameTime() * 60;
             HitBox.y += Velocity.Y * GetFrameTime() * 60;
 
             MapCoordinate = Map.GetCoordinate(this);
+
+            if (LocalTime >= 0.8)
+            {
+                LocalTime = 0;
+            }
 
             //if (Program.level1.enemyAtack.Currentframe == 2)
             //    AtackBox = new Rectangle(HitBox.x + HitBox.width, HitBox.y, 60, 200);
@@ -73,20 +81,21 @@ namespace SwordAndGun
 
         public void ToggleNoClip()
         {
-            HaveNoClip = !HaveNoClip;
+            HaveNoClip = true;
+            LocalTime = 0;
         }
 
-        public LinkedList<(int, int)> PathToPlayer(Player player)
+        public void FindPathToPlayer(Player player, (int, int) position)
         {
             var searhIn = new Queue<(int, int)>();
             var tracks = new Dictionary<(int, int), LinkedList<(int, int)>>();
             var visited = new HashSet<(int, int)>();
 
-            searhIn.Enqueue(MapCoordinate);
-            visited.Add(MapCoordinate);
-            tracks.Add(MapCoordinate, new LinkedList<(int, int)>());
+            searhIn.Enqueue(position);
+            visited.Add(position);
+            tracks.Add(position, new LinkedList<(int, int)>());
 
-            tracks[MapCoordinate].AddLast(MapCoordinate);
+            tracks[position].AddLast(position);
 
             while (searhIn.Count != 0)
             {
@@ -106,7 +115,11 @@ namespace SwordAndGun
                     break;
             }
 
-            return tracks[player.MapCoordinate];
+            if (tracks.ContainsKey(player.MapCoordinate))
+                foreach (var point in tracks[player.MapCoordinate])
+                    PathToPlayer.AddFirst(point);
+            else
+                PathToPlayer = new LinkedList<(int, int)>();
         }
     }
 }

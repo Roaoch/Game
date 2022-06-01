@@ -34,10 +34,11 @@ namespace SwordAndGun
                 {
                     BeginMode2D(camera);
                     {
-                        camera.target = CameraToPlayer(camera, player);
+                        camera.target = CameraToEntity(camera, player);
 
                         ClearBackground(Color.WHITE);
                         world.Time += GetFrameTime();
+                        UpAllTimers();
 
                         if (!player.IsAtacking)
                         {
@@ -92,15 +93,16 @@ namespace SwordAndGun
                             DrawRectangleRec(platform, Color.DARKGRAY);
                         }
 
-                        DrawFPS(10, 10);
-                        DrawText(player.Velocity.ToString(), 10, 30, 20, Color.LIME);
-                        DrawText(player.HitBox.ToString(), 10, 50, 20, Color.LIME);
-                        //DrawText(enemyHiveMind.AllEnemies[0].Hp.ToString(), GetScreenWidth() - 60, 10, 20, Color.RED);
-
-                        DrawRectangleRec(player.HitBox, new Color(255, 0, 0, 50));
-                        DrawRectangleRec(player.AtackBox, new Color(230, 0, 0, 50));
+                        foreach (var wall in world.WorldWalls)
+                        {
+                            DrawRectangleRec(wall, Color.BLACK);
+                        }
                     }
                     EndMode2D();
+
+                    DrawFPS(10, 10);
+                    DrawText(player.Velocity.ToString(), 10, 30, 20, Color.LIME);
+                    DrawText(player.HitBox.ToString(), 10, 50, 20, Color.LIME);
                 }
                 EndDrawing();
             }
@@ -108,11 +110,20 @@ namespace SwordAndGun
             CloseWindow();
         }
 
+        private static void UpAllTimers()
+        {
+            var frameTime = GetFrameTime();
+            PlayerWalk.LocalTimer += frameTime;
+            PlayerAtack.LocalTimer += frameTime;
+            EnemyWalk.LocalTimer += frameTime;
+            //EnemyAtack.LocalTimer += frameTime;
+        }
+
         private static void DrawPlayer(Player player, Animation animation)
         {
-            if (Level.World.Time >= animation.TimePerFrame)
+            if (animation.LocalTimer >= animation.TimePerFrame)
             {
-                Level.World.Time = 0;
+                animation.LocalTimer = 0;
                 animation.Currentframe++;
             }
 
@@ -132,9 +143,9 @@ namespace SwordAndGun
 
         private static void DrawEnemy(Enemy enemy, Animation animation)
         {
-            if (Level.World.Time >= animation.TimePerFrame)
+            if (animation.LocalTimer >= animation.TimePerFrame)
             {
-                Level.World.Time = 0;
+                animation.LocalTimer = 0;
                 animation.Currentframe++;
             }
 
@@ -152,10 +163,10 @@ namespace SwordAndGun
                 Color.RAYWHITE);
         }
 
-        private static Vector2 CameraToPlayer(Camera2D camera, Player player)
+        private static Vector2 CameraToEntity(Camera2D camera, IMoveable player)
         {
-            var x = player.HitBox.x - GetScreenWidth() / 4;
-            var y = player.HitBox.y - GetScreenHeight() / 2;
+            var x = player.GetHitBox().x - GetScreenWidth() / 4;
+            var y = player.GetHitBox().y - GetScreenHeight() / 2;
             return (new Vector2(x, y) + camera.target) / 2;
         }
     }

@@ -9,8 +9,7 @@ namespace SwordAndGun
         public static MovementForLevel[,] MapLikeMovements { get; private set; }
         public static int LenghtX { get; private set; }
         public static int LenghtY { get; private set; }
-
-        private static float tileSize;
+        public static float TileSize;
 
         public static void SetMap(string movementsMap, Player player, List<Enemy> enemies, World world)
         {
@@ -18,14 +17,22 @@ namespace SwordAndGun
             LenghtX = MapLikeMovements.GetLength(0);
             LenghtY = MapLikeMovements.GetLength(1);
 
-            tileSize = world.WorldPlatforms[0].width / (LenghtX - 2);
+            TileSize = world.WorldPlatforms[0].width / (LenghtX - 2);
+
+            player.MapCoordinate = GetCoordinate(player);
+            foreach (var enemy in enemies)
+            {
+                enemy.MapCoordinate = GetCoordinate(enemy);
+                enemy.FindPathToPlayer(player, enemy.MapCoordinate);
+            }
+
         }
 
         public static (int, int) GetCoordinate(IMoveable entity)
         {
             return (
-                (int)(entity.GetHitBox().x / tileSize) + 1,
-                LenghtY - ((int)(entity.GetHitBox().y / tileSize) + 2)
+               (int)(entity.GetHitBox().x / TileSize) + 1,
+                (int)(entity.GetHitBox().y / TileSize) + 1
                 );
         }
 
@@ -33,11 +40,16 @@ namespace SwordAndGun
         {
             var offsets = new List<(int, int)>() { (-1, 0), (1, 0), (0, -1), (0, 1) };
 
-            return offsets
-                .Select(e => (e.Item1 + coordinate.Item1, e.Item2 + coordinate.Item2))
-                .Where(e => e.Item1 >= 0 && e.Item2 >= 0)
-                .Where(e => e.Item1 < LenghtX && e.Item2 < LenghtY)
-                .Where(e => MapLikeMovements[e.Item1, e.Item2] != MovementForLevel.NoMovement);
+            foreach(var offset in offsets)
+            {
+                var newCoordinateX = coordinate.Item1 + offset.Item1;
+                var newCoordinateY = coordinate.Item2 + offset.Item2;
+                if (newCoordinateX >= 0 && newCoordinateY >= 0 &&
+                    newCoordinateX < LenghtX && newCoordinateY < LenghtY &&
+                    MapLikeMovements[newCoordinateX, newCoordinateY] != MovementForLevel.NoMovement &&
+                    MapLikeMovements[newCoordinateX, newCoordinateY] != MovementForLevel.Jump)
+                    yield return (newCoordinateX, newCoordinateY);
+            }
         }
 
         private static MovementForLevel[,] StringToMovementForLevelMap(string movementsMap)
@@ -68,3 +80,13 @@ namespace SwordAndGun
         }
     }
 }
+/*
+NNNNNNNNNNNNN
+NWCCJJCCWNNNN
+NNCCWWCCNNNCN
+NWCCNNNNNCCCN
+NNNCWWJJWCCCN
+NCCCCNNNNNCCN
+NCCCCWWWNNCCN
+NNNNNNNNNNNNN
+ */
