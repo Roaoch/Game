@@ -55,6 +55,13 @@ namespace SwordAndGun
                 obj.Velocity = new Vector2(obj.Velocity.X, 0);
             }
         }
+
+        public static Rectangle GenerateAtackBox(IMoveable obj, int forwardBackward)
+        {
+            return new Rectangle(obj.GetHitBox().x + (-60 + forwardBackward * 60) / 2 + (obj.GetHitBox().width + forwardBackward * obj.GetHitBox().width) / 2,
+                obj.GetHitBox().y, 60, 200);
+        }
+
         private void AlongGravity(IMoveable obj)
         {
             obj.Velocity += GravityForce;

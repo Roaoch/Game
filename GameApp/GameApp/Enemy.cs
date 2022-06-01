@@ -18,7 +18,7 @@ namespace SwordAndGun
         public (int, int) MapCoordinate { get; set; }
         public LinkedList<(int, int)> PathToPlayer { get; private set; } = new LinkedList<(int, int)>();
         public float Hp { get => hp; set => hp = Math.Clamp(value, 0, 100); }
-        public float AtackPower { get; set; } = 50;
+        public float AtackPower { get; set; } = 60;
         public int ForwardBackward { get; private set; } = 1;
 
         public bool CanBeMoved { get; set; }
@@ -60,15 +60,20 @@ namespace SwordAndGun
                 LocalTime = 0;
             }
 
-            //if (Program.level1.enemyAtack.Currentframe == 2)
-            //    AtackBox = new Rectangle(HitBox.x + HitBox.width, HitBox.y, 60, 200);
-            //else
-            //    AtackBox = default(Rectangle);
+            if (Drawer.enemyAtack.Currentframe == 2)
+                AtackBox = World.GenerateAtackBox(this, -ForwardBackward);
+            else
+                AtackBox = default(Rectangle);
         }
 
         public Rectangle GetHitBox()
         {
             return HitBox;
+        }
+
+        public void SetDisplacment(int displacmentToPlayer)
+        {
+            ForwardBackward = displacmentToPlayer;
         }
 
         public void Atack()

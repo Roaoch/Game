@@ -3,6 +3,7 @@ using System.Linq;
 using static Raylib_cs.Raylib;
 using System.Collections.Generic;
 using System.Numerics;
+using System;
 
 namespace SwordAndGun
 {
@@ -27,23 +28,40 @@ namespace SwordAndGun
                 .ToList();
             foreach(var enemy in AllEnemies)
             {
+                var displacmentToPlayer = GetDisplacment(player.MapCoordinate, enemy.MapCoordinate);
+                if (displacmentToPlayer.X == 0 && displacmentToPlayer.Y == 0)
+                {
+                    enemy.Atack();
+                    //enemy.SetDisplacment(-(int)displacmentToPlayer.X);
+                }
+
                 if (tempPlayerCoordinate != player.MapCoordinate)
                     enemy.FindPathToPlayer(player, enemy.MapCoordinate);
 
-                if (enemy.PathToPlayer.Count != 0)
+                if (!enemy.IsAtacking && enemy.PathToPlayer.Count != 0)
                     GoToPlayer(enemy);
 
+
                 enemy.Update(world);
-                CheckPlayerHit(enemy, player);
+                CheckPlayersHit(enemy, player);
+                CheckEnemisHit(enemy, player);
             }
             tempPlayerCoordinate = player.MapCoordinate;
         }
 
-        private void CheckPlayerHit(Enemy enemy, Player player)
+        private void CheckPlayersHit(Enemy enemy, Player player)
         {
             if(CheckCollisionRecs(enemy.HitBox, player.AtackBox))
             {
                 enemy.Hp -= player.AtackPower * GetFrameTime();
+            }
+        }
+
+        private void CheckEnemisHit(Enemy enemy, Player player)
+        {
+            if(CheckCollisionRecs(enemy.AtackBox, player.HitBox))
+            {
+                player.Hp -= enemy.AtackPower * GetFrameTime();
             }
         }
 

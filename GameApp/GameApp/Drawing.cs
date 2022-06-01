@@ -11,9 +11,10 @@ namespace SwordAndGun
         private static Animation playerWalk = new Animation(@"../../../Texture/Walk.png", 3, 0.2f);
         public static Animation playerAtack = new Animation(@"../../../Texture/Atack.png", 4, 0.5f);
         private static Animation enemyWalk = new Animation(@"../../../Texture/EnemyWalk.png", 3, 0.2f);
-        public static Animation enemyAtack = new Animation(@"../../../Texture/EnemyAtack.png", 4, 0.5f);
+        public static Animation enemyAtack = new Animation(@"../../../Texture/EnemyAtack.png", 4, 0.8f);
 
         private static bool inMainMenu = true;
+        private static bool playerWin = false;
 
         public static void Initialize(Level level)
         {
@@ -44,6 +45,25 @@ namespace SwordAndGun
 
                         if (Controller.IsButtonForSkipMenuPressed())
                             inMainMenu = false;
+                    }
+                    else if (player.IsDead)
+                    {
+                        ClearBackground(Color.BLACK);
+
+                        DrawText("Mission Failed, we'll get em next time", GetScreenWidth() / 2 - 320, GetScreenHeight() / 2 - 100, 35, Color.WHITE);
+                        DrawText("press ( Space )", GetScreenWidth() / 2 - 100, GetScreenHeight() / 2, 25, Color.GRAY);
+
+                        if (Controller.IsButtonForSkipMenuPressed())
+                        {
+                            player.IsDead = false;
+                            player.Hp = 100;
+                        }
+                    }
+                    else if (playerWin)
+                    {
+                        ClearBackground(Color.BLACK);
+
+                        DrawText("Mission Accomplished!", GetScreenWidth() / 2 - 200, GetScreenHeight() / 2 - 50, 50, Color.WHITE);
                     }
                     else
                     {
@@ -84,6 +104,7 @@ namespace SwordAndGun
 
                         DrawFPS(10, 10);
                         DrawText("HP = " + player.Hp.ToString() + "%", 10, 30, 20, Color.LIME);
+                        DrawText(enemyAtack.Currentframe.ToString(), 10, 50, 20, Color.LIME);
                     }
                     EndDrawing();
                 }
@@ -128,9 +149,9 @@ namespace SwordAndGun
             if (entity.IsAtacking)
             {
                 DrawAnimation(entity, atack, forwardBackward);
-                if (playerAtack.Currentframe == playerAtack.MaxFrameCount - 1)
+                if (atack.Currentframe == atack.MaxFrameCount - 1)
                 {
-                    playerAtack.Currentframe = 0;
+                    atack.Currentframe = 0;
                     entity.IsAtacking = false;
                 }
             }
