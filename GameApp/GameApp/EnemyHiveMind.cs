@@ -10,6 +10,7 @@ namespace SwordAndGun
     public class EnemyHiveMind
     {
         public List<Enemy> AllEnemies { get; private set; }
+        public bool AllEnemiesAreDead { get => AllEnemies.Count == 0; }
 
         private readonly Vector2 jumpVelocity = new Vector2(100, -100);
         private readonly Vector2 walkVelocity = new Vector2(5, 0);
@@ -32,7 +33,6 @@ namespace SwordAndGun
                 if (displacmentToPlayer.X == 0 && displacmentToPlayer.Y == 0)
                 {
                     enemy.Atack();
-                    //enemy.SetDisplacment(-(int)displacmentToPlayer.X);
                 }
 
                 if (tempPlayerCoordinate != player.MapCoordinate)

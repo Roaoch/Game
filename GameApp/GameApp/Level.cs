@@ -10,9 +10,9 @@ namespace SwordAndGun
         public EnemyHiveMind EnemyHiveMind;
         public World World;
 
-        public Level(Player player, List<Enemy> enemies, List<Rectangle> platforms, List<Rectangle> walls, string movemntsMap)
+        public Level(Player player, List<Enemy> enemies, List<Rectangle> platforms, List<Rectangle> walls, Rectangle exit, Document goal, string movemntsMap)
         {
-            World = new World(platforms, walls);
+            World = new World(platforms, walls, goal, exit);
             Map.SetMap(movemntsMap, player, enemies, World);
             Player = player;
             EnemyHiveMind = new EnemyHiveMind(enemies);

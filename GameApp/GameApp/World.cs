@@ -12,14 +12,18 @@ namespace SwordAndGun
         public float Time { get; set; } = 0;
         public List<Rectangle> WorldPlatforms { get; }
         public List<Rectangle> WorldWalls { get; }
+        public static Rectangle Exit { get; private set; }
+        public static Document Goal { get; private set; }
 
         private float windageParametr = 0.1f;
         private float frictinParametr = 0.2f;
 
-        public World(List<Rectangle> platforms, List<Rectangle> walls)
+        public World(List<Rectangle> platforms, List<Rectangle> walls, Document goal, Rectangle exit)
         {
             WorldPlatforms = platforms;
             WorldWalls = walls;
+            Goal = goal;
+            Exit = exit;
         }
 
         public void AlongPhysics(IMoveable obj)
@@ -60,6 +64,15 @@ namespace SwordAndGun
         {
             return new Rectangle(obj.GetHitBox().x + (-60 + forwardBackward * 60) / 2 + (obj.GetHitBox().width + forwardBackward * obj.GetHitBox().width) / 2,
                 obj.GetHitBox().y, 60, 200);
+        }
+
+        public static bool IsGameOver(Player player, EnemyHiveMind enemyHiveMind)
+        {
+            if (!Goal.OnTheGround && enemyHiveMind.AllEnemiesAreDead)
+                return CheckCollisionRecs(player.HitBox, Exit);
+            if(Goal.OnTheGround)
+                Goal.OnTheGround = !CheckCollisionRecs(player.HitBox, Goal.HitBox);
+            return false;
         }
 
         private void AlongGravity(IMoveable obj)

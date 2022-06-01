@@ -18,7 +18,7 @@ namespace SwordAndGun
         public (int, int) MapCoordinate { get; set; }
         public LinkedList<(int, int)> PathToPlayer { get; private set; } = new LinkedList<(int, int)>();
         public float Hp { get => hp; set => hp = Math.Clamp(value, 0, 100); }
-        public float AtackPower { get; set; } = 60;
+        public float AtackPower { get; set; } = 30;
         public int ForwardBackward { get; private set; } = 1;
 
         public bool CanBeMoved { get; set; }

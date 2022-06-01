@@ -11,7 +11,7 @@ namespace SwordAndGun
         private static Animation playerWalk = new Animation(@"../../../Texture/Walk.png", 3, 0.2f);
         public static Animation playerAtack = new Animation(@"../../../Texture/Atack.png", 4, 0.5f);
         private static Animation enemyWalk = new Animation(@"../../../Texture/EnemyWalk.png", 3, 0.2f);
-        public static Animation enemyAtack = new Animation(@"../../../Texture/EnemyAtack.png", 4, 0.8f);
+        public static Animation enemyAtack = new Animation(@"../../../Texture/EnemyAtack.png", 4, 1f);
 
         private static bool inMainMenu = true;
         private static bool playerWin = false;
@@ -63,7 +63,7 @@ namespace SwordAndGun
                     {
                         ClearBackground(Color.BLACK);
 
-                        DrawText("Mission Accomplished!", GetScreenWidth() / 2 - 200, GetScreenHeight() / 2 - 50, 50, Color.WHITE);
+                        DrawText("Mission Accomplished!", GetScreenWidth() / 2 - 280, GetScreenHeight() / 2 - 50, 50, Color.WHITE);
                     }
                     else
                     {
@@ -74,6 +74,7 @@ namespace SwordAndGun
                             ClearBackground(Color.WHITE);
                             world.Time += GetFrameTime();
                             UpAllTimers();
+                            playerWin = World.IsGameOver(player, enemyHiveMind);
 
                             if (!player.IsAtacking)
                             {
@@ -86,25 +87,23 @@ namespace SwordAndGun
                             DrawEntity(player, player.ForwardBackward, playerWalk, playerAtack);
 
                             foreach (var enemy in enemyHiveMind.AllEnemies)
-                            {
                                 DrawEntity(enemy, enemy.ForwardBackward, enemyWalk, enemyAtack);
-                            }
 
                             foreach (var platform in world.WorldPlatforms)
-                            {
                                 DrawRectangleRec(platform, Color.DARKGRAY);
-                            }
 
                             foreach (var wall in world.WorldWalls)
-                            {
                                 DrawRectangleRec(wall, Color.BLACK);
-                            }
+
+                            if (World.Goal.OnTheGround)
+                                DrawRectangleRec(World.Goal.HitBox, Color.BROWN);
+                            DrawRectangleRec(World.Exit, Color.GREEN);
                         }
                         EndMode2D();
 
-                        DrawFPS(10, 10);
-                        DrawText("HP = " + player.Hp.ToString() + "%", 10, 30, 20, Color.LIME);
-                        DrawText(enemyAtack.Currentframe.ToString(), 10, 50, 20, Color.LIME);
+                        if(!World.Goal.OnTheGround)
+                            DrawText("Document in Your Hands", 10, GetScreenHeight() - 50, 30, Color.BLACK);
+                        DrawText("HP = " + player.Hp.ToString() + "%", 10, 10, 25, Color.LIME);
                     }
                     EndDrawing();
                 }

@@ -37,6 +37,8 @@ namespace SwordAndGun
                 new Rectangle(2750, 1410, 300, 690),
                 new Rectangle(3850, -350, 1100, 2950)
             },
+            new Rectangle(0, 1820, 20, 280),
+            new Document(3480, 2040),
             @"NNNNNNNNNNNNN
 NWCCJJCCWNNNN
 NNCCWWCCNNNCN
