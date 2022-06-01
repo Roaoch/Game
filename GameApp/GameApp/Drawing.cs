@@ -8,9 +8,13 @@ namespace SwordAndGun
     {
         private static Level Level;
 
-        private static Animation PlayerWalk = new Animation(@"../../../Texture/Walk.png", 3, 0.2f);
-        public static Animation PlayerAtack = new Animation(@"../../../Texture/Atack.png", 4, 0.5f);
-        private static Animation EnemyWalk = new Animation(@"../../../Texture/EnemyWalk.png", 3, 0.2f);
+        private static Animation playerWalk = new Animation(@"../../../Texture/Walk.png", 3, 0.2f);
+        public static Animation playerAtack = new Animation(@"../../../Texture/Atack.png", 4, 0.5f);
+        private static Animation enemyWalk = new Animation(@"../../../Texture/EnemyWalk.png", 3, 0.2f);
+        public static Animation enemyAtack = new Animation(@"../../../Texture/EnemyAtack.png", 4, 1f);
+
+        private static bool inMainMenu = true;
+        private static bool playerWin = false;
 
         public static void Initialize(Level level)
         {
@@ -26,93 +30,102 @@ namespace SwordAndGun
             var player = Level.Player;
 
             var camera = new Camera2D();
-            camera.zoom = 0.78f;
+            camera.zoom = 1f;
 
             while (!WindowShouldClose())
             {
                 BeginDrawing();
                 {
-                    BeginMode2D(camera);
+                    if (inMainMenu)
                     {
-                        camera.target = CameraToPlayer(camera, player);
+                        ClearBackground(Color.BLACK);
 
-                        ClearBackground(Color.WHITE);
-                        world.Time += GetFrameTime();
+                        DrawText("Kill All Enemies and Find the Document", GetScreenWidth() / 2 - 320, GetScreenHeight() / 2 - 100, 35, Color.WHITE);
+                        DrawText("press ( Space )", GetScreenWidth() / 2 - 100, GetScreenHeight() / 2, 25, Color.GRAY);
 
-                        if (!player.IsAtacking)
-                        {
-                            Controller.CheckInputs(player);
-                        }
-
-                        player.Update(world);
-                        enemyHiveMind.Update(world, player);
-
-                        if (player.IsAtacking)
-                        {
-                            DrawPlayer(player, PlayerAtack);
-                            if (PlayerAtack.Currentframe == PlayerAtack.MaxFrameCount - 1)
-                            {
-                                PlayerAtack.Currentframe = 0;
-                                player.IsAtacking = false;
-                            }
-                        }
-                        else if (player.IsMoving && player.CanBeMoved)
-                        {
-                            DrawPlayer(player, PlayerWalk);
-                        }
-                        else
-                        {
-                            DrawTexturePro(PlayerWalk.Texture,
-                                new Rectangle(0, 0, PlayerWalk.TextureBox.width, PlayerWalk.TextureBox.height),
-                                player.HitBox,
-                                Vector2.Zero,
-                                0,
-                                Color.RAYWHITE);
-                        }
-
-                        foreach (var enemy in enemyHiveMind.AllEnemies)
-                        {
-                            if (enemy.IsMoving && enemy.CanBeMoved)
-                            {
-                                DrawEnemy(enemy, EnemyWalk);
-                            }
-                            else
-                            {
-                                DrawTexturePro(EnemyWalk.Texture,
-                                    new Rectangle(0, 0, EnemyWalk.TextureBox.width, EnemyWalk.TextureBox.height),
-                                    enemy.HitBox,
-                                    Vector2.Zero,
-                                    0,
-                                    Color.RAYWHITE);
-                            }
-                        }
-
-                        foreach (var platform in world.WorldPlatforms)
-                        {
-                            DrawRectangleRec(platform, Color.DARKGRAY);
-                        }
-
-                        DrawFPS(10, 10);
-                        DrawText(player.Velocity.ToString(), 10, 30, 20, Color.LIME);
-                        DrawText(player.HitBox.ToString(), 10, 50, 20, Color.LIME);
-                        //DrawText(enemyHiveMind.AllEnemies[0].Hp.ToString(), GetScreenWidth() - 60, 10, 20, Color.RED);
-
-                        DrawRectangleRec(player.HitBox, new Color(255, 0, 0, 50));
-                        DrawRectangleRec(player.AtackBox, new Color(230, 0, 0, 50));
+                        if (Controller.IsButtonForSkipMenuPressed())
+                            inMainMenu = false;
                     }
-                    EndMode2D();
+                    else if (player.IsDead)
+                    {
+                        ClearBackground(Color.BLACK);
+
+                        DrawText("Mission Failed, we'll get em next time", GetScreenWidth() / 2 - 320, GetScreenHeight() / 2 - 100, 35, Color.WHITE);
+                        DrawText("press ( Space )", GetScreenWidth() / 2 - 100, GetScreenHeight() / 2, 25, Color.GRAY);
+
+                        if (Controller.IsButtonForSkipMenuPressed())
+                        {
+                            player.IsDead = false;
+                            player.Hp = 100;
+                        }
+                    }
+                    else if (playerWin)
+                    {
+                        ClearBackground(Color.BLACK);
+
+                        DrawText("Mission Accomplished!", GetScreenWidth() / 2 - 280, GetScreenHeight() / 2 - 50, 50, Color.WHITE);
+                    }
+                    else
+                    {
+                        BeginMode2D(camera);
+                        {
+                            camera.target = CameraToEntity(camera, player);
+
+                            ClearBackground(Color.WHITE);
+                            world.Time += GetFrameTime();
+                            UpAllTimers();
+                            playerWin = World.IsGameOver(player, enemyHiveMind);
+
+                            if (!player.IsAtacking)
+                            {
+                                Controller.CheckInputs(player);
+                            }
+
+                            player.Update(world);
+                            enemyHiveMind.Update(world, player);
+
+                            DrawEntity(player, player.ForwardBackward, playerWalk, playerAtack);
+
+                            foreach (var enemy in enemyHiveMind.AllEnemies)
+                                DrawEntity(enemy, enemy.ForwardBackward, enemyWalk, enemyAtack);
+
+                            foreach (var platform in world.WorldPlatforms)
+                                DrawRectangleRec(platform, Color.DARKGRAY);
+
+                            foreach (var wall in world.WorldWalls)
+                                DrawRectangleRec(wall, Color.BLACK);
+
+                            if (World.Goal.OnTheGround)
+                                DrawRectangleRec(World.Goal.HitBox, Color.BROWN);
+                            DrawRectangleRec(World.Exit, Color.GREEN);
+                        }
+                        EndMode2D();
+
+                        if(!World.Goal.OnTheGround)
+                            DrawText("Document in Your Hands", 10, GetScreenHeight() - 50, 30, Color.BLACK);
+                        DrawText("HP = " + player.Hp.ToString() + "%", 10, 10, 25, Color.LIME);
+                    }
+                    EndDrawing();
                 }
-                EndDrawing();
             }
 
             CloseWindow();
         }
 
-        private static void DrawPlayer(Player player, Animation animation)
+        private static void UpAllTimers()
         {
-            if (Level.World.Time >= animation.TimePerFrame)
+            var frameTime = GetFrameTime();
+            playerWalk.LocalTimer += frameTime;
+            playerAtack.LocalTimer += frameTime;
+            enemyWalk.LocalTimer += frameTime;
+            enemyAtack.LocalTimer += frameTime;
+        }
+
+        private static void DrawAnimation(IMoveable entity, Animation animation, int forwardBeckward)
+        {
+            if (animation.LocalTimer >= animation.TimePerFrame)
             {
-                Level.World.Time = 0;
+                animation.LocalTimer = 0;
                 animation.Currentframe++;
             }
 
@@ -120,42 +133,46 @@ namespace SwordAndGun
 
             animation.TextureBox.x = animation.TextureBox.width * animation.Currentframe;
 
-            var c = player.HitBox.height / animation.TextureBox.height;
+            var c = entity.GetHitBox().height / animation.TextureBox.height;
 
             DrawTexturePro(animation.Texture,
-                animation.TextureBox,
-                new Rectangle(player.HitBox.x, player.HitBox.y, animation.TextureBox.width * c, animation.TextureBox.height * c),
+                new Rectangle(animation.TextureBox.x, animation.TextureBox.y, forwardBeckward * animation.TextureBox.width, animation.TextureBox.height),
+                new Rectangle(entity.GetHitBox().x, entity.GetHitBox().y, animation.TextureBox.width * c, animation.TextureBox.height * c),
                 Vector2.Zero,
                 0,
                 Color.RAYWHITE);
         }
 
-        private static void DrawEnemy(Enemy enemy, Animation animation)
+        private static void DrawEntity(ICanAtack entity, int forwardBackward, Animation walk, Animation atack)
         {
-            if (Level.World.Time >= animation.TimePerFrame)
+            if (entity.IsAtacking)
             {
-                Level.World.Time = 0;
-                animation.Currentframe++;
+                DrawAnimation(entity, atack, forwardBackward);
+                if (atack.Currentframe == atack.MaxFrameCount - 1)
+                {
+                    atack.Currentframe = 0;
+                    entity.IsAtacking = false;
+                }
             }
-
-            animation.Currentframe = animation.Currentframe % animation.MaxFrameCount;
-
-            animation.TextureBox.x = animation.TextureBox.width * animation.Currentframe;
-
-            var c = enemy.HitBox.height / animation.TextureBox.height;
-
-            DrawTexturePro(animation.Texture,
-                animation.TextureBox,
-                new Rectangle(enemy.HitBox.x, enemy.HitBox.y, animation.TextureBox.width * c, animation.TextureBox.height * c),
-                Vector2.Zero,
-                0,
-                Color.RAYWHITE);
+            else if (entity.IsMoving && entity.CanBeMoved)
+            {
+                DrawAnimation(entity, walk, forwardBackward);
+            }
+            else
+            {
+                DrawTexturePro(walk.Texture,
+                    new Rectangle(0, 0, forwardBackward * walk.TextureBox.width, walk.TextureBox.height),
+                    entity.GetHitBox(),
+                    Vector2.Zero,
+                    0,
+                    Color.RAYWHITE);
+            }
         }
 
-        private static Vector2 CameraToPlayer(Camera2D camera, Player player)
+        private static Vector2 CameraToEntity(Camera2D camera, IMoveable player)
         {
-            var x = player.HitBox.x - GetScreenWidth() / 4;
-            var y = player.HitBox.y - GetScreenHeight() / 2;
+            var x = player.GetHitBox().x - GetScreenWidth() / 4;
+            var y = player.GetHitBox().y - GetScreenHeight() / 2;
             return (new Vector2(x, y) + camera.target) / 2;
         }
     }

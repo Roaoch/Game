@@ -10,6 +10,7 @@ namespace SwordAndGun
         public int Currentframe = 0;
         public int MaxFrameCount;
         public float TimePerFrame;
+        public float LocalTimer;
 
         public Animation(string path, int frameCount, float timePerFrame)
         {
