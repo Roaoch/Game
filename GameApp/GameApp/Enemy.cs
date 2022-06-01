@@ -6,7 +6,7 @@ using System;
 
 namespace SwordAndGun
 {
-    public class Enemy : IMoveable
+    public class Enemy : ICanAtack, IMoveable
     {
         private Vector2 velocity;
         private float hp = 100;
@@ -19,6 +19,7 @@ namespace SwordAndGun
         public LinkedList<(int, int)> PathToPlayer { get; private set; } = new LinkedList<(int, int)>();
         public float Hp { get => hp; set => hp = Math.Clamp(value, 0, 100); }
         public float AtackPower { get; set; } = 50;
+        public int ForwardBackward { get; private set; } = 1;
 
         public bool CanBeMoved { get; set; }
         public bool IsAtacking { get; set; }
@@ -48,6 +49,9 @@ namespace SwordAndGun
 
             HitBox.x += Velocity.X * GetFrameTime() * 60;
             HitBox.y += Velocity.Y * GetFrameTime() * 60;
+
+            if (velocity.X != 0)
+                ForwardBackward = -(int)(velocity.X / Math.Abs(velocity.X));
 
             MapCoordinate = Map.GetCoordinate(this);
 

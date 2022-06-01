@@ -15,7 +15,7 @@ namespace SwordAndGun
             World = new World(platforms, walls);
             Map.SetMap(movemntsMap, player, enemies, World);
             Player = player;
-            EnemyHiveMind = new EnemyHiveMind(enemies, player);
+            EnemyHiveMind = new EnemyHiveMind(enemies);
         }
     }
 }

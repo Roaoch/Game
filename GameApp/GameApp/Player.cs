@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SwordAndGun
 {
-    public class Player : IMoveable
+    public class Player : ICanAtack, IMoveable
     {
         private Vector2 velocity;
         private float hp = 100;
@@ -18,6 +18,7 @@ namespace SwordAndGun
         public float Hp { get => hp; set => Math.Clamp(value, 0, 100); }
         public float AtackPower { get; set; } = 100;
         public (int, int) MapCoordinate { get; set; }
+        public int ForwardBackward { get; private set; } = 1;
 
         public bool CanBeMoved { get; set; }
         public bool IsAtacking { get; set; }
@@ -47,11 +48,14 @@ namespace SwordAndGun
             HitBox.x += Velocity.X * GetFrameTime() * 60;
             HitBox.y += Velocity.Y * GetFrameTime() * 60;
 
+            if(velocity.X != 0)
+                ForwardBackward = (int)(velocity.X / Math.Abs(velocity.X));
+
             MapCoordinate = Map.GetCoordinate(this);
 
             localTime += GetFrameTime();
 
-            if (Drawer.PlayerAtack.Currentframe == 2)
+            if (Drawer.playerAtack.Currentframe == 2)
                 AtackBox = new Rectangle(HitBox.x + HitBox.width, HitBox.y, 60, 200);
             else
                 AtackBox = default(Rectangle);

@@ -43,5 +43,10 @@ namespace SwordAndGun
                 player.ToggleNoClip();
             }
         }
+
+        public static bool IsButtonForSkipMenuPressed()
+        {
+            return IsKeyPressed(KeyboardKey.KEY_SPACE);
+        }
     }
 }

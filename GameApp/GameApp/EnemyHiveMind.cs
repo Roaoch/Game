@@ -11,11 +11,11 @@ namespace SwordAndGun
         public List<Enemy> AllEnemies { get; private set; }
 
         private readonly Vector2 jumpVelocity = new Vector2(100, -100);
-        private readonly Vector2 walkVelocity = new Vector2(4, 0);
+        private readonly Vector2 walkVelocity = new Vector2(5, 0);
         private readonly Vector2 climbUpVelocity = new Vector2(0, -10);
         private (int, int) tempPlayerCoordinate;
 
-        public EnemyHiveMind(List<Enemy> enemies, Player player)
+        public EnemyHiveMind(List<Enemy> enemies)
         {
             AllEnemies = enemies;
         }

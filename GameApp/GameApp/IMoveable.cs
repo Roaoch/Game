@@ -5,6 +5,7 @@ using System.Numerics;
 public interface IMoveable
 {
     Vector2 Velocity { get; set; }
+    bool IsMoving { get; }
     bool CanBeMoved { get; set; }
     bool HaveNoClip { get; set; }
 
